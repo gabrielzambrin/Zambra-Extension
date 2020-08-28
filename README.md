@@ -2,7 +2,7 @@
 
 ## Functionality
 
-![snippets](img/use.gif)
+![snippets](https://gabrielzambrin@dev.azure.com/gabrielzambrin/Zambra%20Snippets/_git/Zambra%20Snippets/img/use.gif)
 
 
 | prefix               | description                                                            |
