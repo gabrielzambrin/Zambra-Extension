@@ -1,0 +1,20 @@
+{
+    "name": "zambra-s-snippets",
+    "displayName": "Zambra's Snippets",
+    "description": "Alguns snippets para facilitar e agilizar seu desenvolvimento.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.48.0"
+    },
+    "categories": [
+        "Snippets"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": "apex",
+                "path": "./snippets/snippets.code-snippets"
+            }
+        ]
+    }
+}
