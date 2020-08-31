@@ -5,6 +5,8 @@
 ![snippets](https://s8.gifyu.com/images/ezgif.com-crop9cb3c67dc82d35c8.gif)
 
 
+## APEX
+
 | prefix               | description                                                            |
 |----------------------|------------------------------------------------------------------------|
 | `debug`              | Log output to console                                                  |
@@ -16,3 +18,12 @@
 | `getPicklist`        | Method to return actives picklist API Names or Values(Label)           |
 | `getPicklistMap`     | Method to return actives picklist map                                  |
 | `getRecordTypeId`    | Get recordtype id of an Object                                         |
+
+
+## JAVASCRIPT
+
+| prefix               | description                                                            |
+|----------------------|------------------------------------------------------------------------|
+| `newaction`          | Create new action                                                      |
+| `newfunction`        | Create new function                                                    |
+| `toast`              | Generate toast event                                                   |
