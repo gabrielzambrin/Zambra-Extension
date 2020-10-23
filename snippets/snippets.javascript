@@ -39,5 +39,15 @@
 			"$0"
 		],
 		"description": "Generate toast event"
-	}
+	},
+	"Extract Function": {
+		"prefix": "extractFunction",
+		"body": [
+			"${1:newFunction} : function(${2:component}, ${3:event}, ${4:helper}) {",
+			"\t$CLIPBOARD",
+			"}",
+			"$0"
+		],
+		"description": "Extract clipboard text to new function"
+    }
 }

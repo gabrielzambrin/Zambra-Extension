@@ -11,7 +11,7 @@
 |----------------------|------------------------------------------------------------------------|
 | `debug`              | Log output to console                                                  |
 | `region`             | Create a region block                                                  |
-| `extractMethod`      | Extract selected text to new method                                    |
+| `extractMethod`      | Extract clipboard text to new method                                   |
 | `getListObjQuery`    | Method to return object list                                           |
 | `getAllFieldsSet`    | Method to return all fields of an object in a Set<String>              |
 | `getAllFieldsString` | Method to return all fields of an object in a string, separated by ',' |
@@ -27,3 +27,4 @@
 | `newaction`          | Create new action                                                      |
 | `newfunction`        | Create new function                                                    |
 | `toast`              | Generate toast event                                                   |
+| `extractMethod`      | Extract clipboard text to new function                                 |

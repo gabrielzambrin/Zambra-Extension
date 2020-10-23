@@ -25,7 +25,7 @@
 			"}",
 			"$0"
 		],
-		"description": "Extract selected text to new method"
+		"description": "Extract clipboard text to new method"
     },
     "Get Object List" : {
 		"prefix": "getListObjQuery",
