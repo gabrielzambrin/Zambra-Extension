@@ -27,4 +27,4 @@
 | `newaction`          | Create new action                                                      |
 | `newfunction`        | Create new function                                                    |
 | `toast`              | Generate toast event                                                   |
-| `extractFunction`      | Extract clipboard text to new function                                 |
+| `extractFunction`    | Extract clipboard text to new function                                 |
