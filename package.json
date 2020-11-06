@@ -1,13 +1,14 @@
 {
     "name": "zambra-s-snippets",
     "displayName": "Zambra's Snippets",
-    "description": "Alguns snippets para facilitar e agilizar seu desenvolvimento.",
-    "version": "0.0.12",
+    "description": "Some snippets to facilitate and speed up your development.",
+    "version": "0.0.14",
     "engines": {
         "vscode": "^1.48.0"
     },
     "categories": [
-        "Snippets"
+        "Snippets",
+        "Programming Languages"
     ],
     "contributes": {
         "snippets": [
@@ -21,6 +22,11 @@
             }
         ]
     },
+    "keywords": [
+        "Salesforce",
+        "Apex",
+        "Snippets"
+    ],
     "publisher": "GabrielZambrin",
     "icon": "icon/sflogo.jpg"
 }
