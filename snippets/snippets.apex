@@ -126,5 +126,21 @@
 			"$0"
 		],
 		"description": "Method to send email"
+	},
+	"Implement Batch":{
+		"prefix": "implementBatch",
+		"body": [
+			"public List<${1:Object}> start(Database.BatchableContext bc){",
+			"\treturn new List<${1:Object}>();",
+			"}",
+			"",
+			"public void execute(Database.BatchableContext bc, List<${1:Object}> scope){",
+			"\t$0",
+			"}",
+			"",
+			"public void finish(Database.BatchableContext bc){}"
+		],
+		"description": "Generate methods to implements a batch class"
 	}
+
 }

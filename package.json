@@ -2,7 +2,7 @@
     "name": "zambra-s-snippets",
     "displayName": "Zambra's Snippets",
     "description": "Some snippets to facilitate and speed up your development.",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "engines": {
         "vscode": "^1.48.0"
     },

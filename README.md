@@ -19,6 +19,7 @@
 | `getPicklistMap`     | Method to return actives picklist map                                  |
 | `getRecordTypeId`    | Get recordtype id of an Object                                         |
 | `sendEmail`          | Method to send email                                                   |
+| `implementBatch`     | Generate methods to implements a batch class                           |
 
 
 ## JAVASCRIPT
