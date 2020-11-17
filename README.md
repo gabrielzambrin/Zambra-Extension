@@ -18,6 +18,7 @@
 | `getPicklist`        | Method to return actives picklist API Names or Values(Label)           |
 | `getPicklistMap`     | Method to return actives picklist map                                  |
 | `getRecordTypeId`    | Get recordtype id of an Object                                         |
+| `sendEmail`          | Method to send email                                                   |
 
 
 ## JAVASCRIPT

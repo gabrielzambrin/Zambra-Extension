@@ -111,6 +111,20 @@
 			"Schema.Sobjecttype.${1:Account}.${2|getRecordTypeInfosByDeveloperName(),getRecordTypeInfosByName()|}.get('${3:RecordTypeName}').getRecordTypeId()$0"
 		],
 		"description": "Get recordtype id of an Object"
+	},
+	"Send email":{
+		"prefix": "sendEmail",
+		"body": [
+			"Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();",
+			"mail.setWhatId(${1:id});",
+			"mail.setToAddresses(${2:addresses});",
+			"mail.setOrgWideEmailAddressId(${3:OWEaddressId});",
+			"mail.setHtmlBody(${4:body});",
+			"mail.setSubject(${5:subject});",
+			"mail.setSaveAsActivity(${6|false,true|});",
+			"Messaging.sendEmail(new List<Messaging.email>{mail});",
+			"$0"
+		],
+		"description": "Method to send email"
 	}
-
 }
