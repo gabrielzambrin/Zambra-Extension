@@ -28,5 +28,12 @@
         "Snippets"
     ],
     "publisher": "GabrielZambrin",
-    "icon": "icon/sflogo.jpg"
+    "icon": "icon/sflogo.jpg",
+    "author": {
+        "name": "Gabriel Zambrin"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gabrielzambrin/Zambra-Snippets"
+    }
 }
