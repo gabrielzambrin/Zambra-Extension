@@ -2,7 +2,7 @@
 
 ## Functionality
 
-![snippets](https://s8.gifyu.com/images/ezgif.com-crop9cb3c67dc82d35c8.gif)
+![snippets](./img/use.gif)
 
 
 ## APEX
