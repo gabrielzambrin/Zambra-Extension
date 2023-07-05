@@ -37,4 +37,3 @@
 | command                               | description                                           |
 |---------------------------------------|-------------------------------------------------------|
 | `Force Apex Deploy`                   | Deploy Apex Class to an org                           |
-| `Force Lightning Web Component Deploy`| Deploy Lightning Web Component to an org              |

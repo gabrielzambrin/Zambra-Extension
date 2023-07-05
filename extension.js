@@ -65,38 +65,6 @@ function activate(context) {
 			}
 		};
 		context.subscriptions.push(forceApexDeploy);
-
-		let forceLwcDeploy = vscode.commands.registerCommand('extension.forceLwcDeploy', function () {
-			// Display a message box to the user
-			// vscode.window.showInformationMessage('Hello World from ext!');
-			getLwcName();
-		});
-	
-		var DeployLwcName = '';
-		
-		var showTerminalDeployLwc = function () {
-			let term = vscode.window.createTerminal('deploylwc');
-			term.show();
-			term.sendText(
-				'sfdx force:source:deploy'+
-				' -m LightningComponentBundle:' + DeployLwcName
-				);
-			};
-			
-			var getLwcName = async () => {
-				
-				const lwcName = await vscode.window.showInputBox({
-					placeHolder: 'Enter Lightning Web Component name',
-					prompt: 'The Lightning Web Component name'
-				});
-				
-				if ( lwcName !== undefined ){
-					DeployLwcName = lwcName;
-					showTerminalDeployLwc();
-				}
-			};
-			
-			context.subscriptions.push(forceLwcDeploy);
 	}
 	exports.activate = activate;
 	
