@@ -30,3 +30,11 @@
 | `newfunction`        | Create new function                                                    |
 | `toast`              | Generate toast event                                                   |
 | `extractFunction`    | Extract clipboard text to new function                                 |
+
+
+## COMMANDS
+
+| command                               | description                                           |
+|---------------------------------------|-------------------------------------------------------|
+| `Force Apex Deploy`                   | Deploy Apex Class to an org                           |
+| `Force Lightning Web Component Deploy`| Deploy Lightning Web Component to an org              |
