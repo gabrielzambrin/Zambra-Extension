@@ -1,6 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const fetch = require("node-fetch");
+const jsonminify = require("jsonminify");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -12,17 +14,20 @@ function activate(context) {
 	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Zambra\'s extension is now active!');
+	// console.log('Zambra\'s extension is now active!');
 	
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let forceApexDeploy = vscode.commands.registerCommand('extension.forceapexdeploy', function () {
+	
+	//#region extension.forceapexdeploy
+	
+	let forceApexDeploy = vscode.commands.registerCommand('zambra-s.forceapexdeploy', function () {
 		// Display a message box to the user
 		// vscode.window.showInformationMessage('Hello World from ext!');
 		getApexClassName();
 	});
-
+	
 	var DeployApexClassInput = {
 		ApexClassName: '',
 		ApexTestClassName: ''
@@ -31,48 +36,185 @@ function activate(context) {
 	var showTerminalDeployApexClass = function () {
 		let term = vscode.window.createTerminal('deployApexClass');
 		term.show();
-		term.sendText(
-			'sfdx force:source:deploy'+
-			' -m ApexClass:' + DeployApexClassInput.ApexClassName +
-			' -l RunSpecifiedTests -r \"' + DeployApexClassInput.ApexTestClassName  + '\"'
-			);
-		};
+		term.sendText('sfdx force:source:deploy'+' -m ApexClass:' + DeployApexClassInput.ApexClassName +' -l RunSpecifiedTests -r \"' + DeployApexClassInput.ApexTestClassName  + '\"');
+	};
+	
+	var getApexClassName = async () => {
 		
-		var getApexClassName = async () => {
-			
-			const className = await vscode.window.showInputBox({
-				placeHolder: 'Enter Apex class name',
-				prompt: 'The Apex class name'
-			});
-			
-			if ( className !== undefined ){
-				DeployApexClassInput.ApexClassName = className;
-				getApexTestClassName();
-			}
-		};
+		const className = await vscode.window.showInputBox({
+			placeHolder: 'Enter Apex class name',
+			prompt: 'The Apex class name'
+		});
 		
-		var getApexTestClassName = async () => {
+		if ( className !== undefined ){
+			DeployApexClassInput.ApexClassName = className;
+			getApexTestClassName();
+		}
+	};
+	
+	var getApexTestClassName = async () => {
+		
+		const testClass = await vscode.window.showInputBox({
+			placeHolder: 'Enter Apex test class name',
+			prompt: 'The Apex test class name'
 			
-			const testClass = await vscode.window.showInputBox({
-				placeHolder: 'Enter Apex test class name',
-				prompt: 'The Apex test class name'
-				
-			});
-			
-			if ( testClass !== undefined ){
-				DeployApexClassInput.ApexTestClassName = testClass;
-				showTerminalDeployApexClass();
+		});
+		
+		if ( testClass !== undefined ){
+			DeployApexClassInput.ApexTestClassName = testClass;
+			showTerminalDeployApexClass();
+		}
+	};
+	
+	//#endregion
+	
+	//#region JSON2Apex
+
+	let json2apexCommand = vscode.commands.registerCommand("zambra-s.json2apex",function() {
+		json2apex();
+	});
+	
+	let editor = vscode.window.activeTextEditor;
+	let outputTerminal = vscode.window.createOutputChannel("Zambra's");
+	let className;
+	let auraEnabled;
+	let params = {};
+	async function json2apex() {
+		let userSelection = editor.document.getText(editor.selection);
+		if(isInvalidSelection(userSelection)){
+			showMessage('error', 'Please select a valid JSON content and try again');
+			return;
+		} 
+		className = await vscode.window.showInputBox({
+			placeHolder: "Enter the generated class name"
+		});
+		if(className === ''){
+			showMessage('error', 'Class name cannot be empty');
+			return;
+		}
+		auraEnabled = await vscode.window.showInputBox({
+			placeHolder: "Use @AuraEnabled? (Y/N - Default N)"
+		});
+		try {
+			let auraOption = validateInputs(auraEnabled, 'aura');
+			auraEnabled = auraOption.auraEnabled;
+		} catch (error) {
+			showMessage('error', error.message);
+			return;
+		}
+		
+		outputTerminal.show();
+		params.className = className;
+		params.auraEnabled = auraEnabled;
+		params.userSelection = userSelection;
+		outputTerminal.appendLine('Process started. Wait...')
+		submitForConversion(params).catch((e)=>{
+			showMessage('error', `Something went wrong...${e.message}`);
+		});
+	}
+	
+	async function submitForConversion(params){
+		let response = await fetch(`https://stepahead2-dev-ed.my.salesforce-sites.com/Zambras/services/apexrest/JSON2Apex?className=${params.className}&auraEnabled=${params.auraEnabled}`, {
+		method: 'POST',
+		mode: 'cors',
+		body: params.userSelection,
+		headers: {
+			'Content-Type': 'application/json',
+			'Accept':'*/*'
+		}
+	}).catch((e)=>{
+		showMessage('error', `Something went wrong...${e.message}`);
+	});
+	try {
+		var treatedResponse = await response.json();
+	} catch (e) {
+		showMessage('error', `Something went wrong...${e.message}`);
+	}
+	outputTerminal.appendLine('Converting data...');
+	if (editor) {
+		//foco no editor principal do vscode
+		vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup');
+		editor.edit((selectedText) => {
+			selectedText.replace(editor.selection, treatedResponse);
+		});
+		// Obter a posição da primeira linha selecionada
+		const firstLine = editor.selection.start.line;
+		// scroll editor para a primeira linha selecionada
+		editor.revealRange(new vscode.Range(firstLine, 0, firstLine, 0), vscode.TextEditorRevealType.Default);
+		outputTerminal.appendLine('Done!');
+		showMessage('success', 'JSON conversion completed successfully');
+	}
+}
+function showMessage(context, content){
+	switch (context) {
+		case 'success':
+		vscode.window.showInformationMessage(content);
+		break;
+		case 'warning':
+		vscode.window.showWarningMessage(content);
+		break;
+		case 'error':
+		vscode.window.showErrorMessage(content);
+		break;
+		default:
+		break;
+	}
+}
+function isInvalidSelection(input){
+	if(input == '') return true;
+	try {
+		JSON.parse(JSON.stringify(input));
+		return false;
+	} catch (e) {
+		return true;
+	}
+}
+function validateInputs(value, key){
+	value = value.toUpperCase();
+	let validInputs = {};
+	
+	if(key =='aura'){
+		if(value == '' || value == 'N'){
+			validInputs.auraEnabled = false
+		}else if(value == 'Y'){
+			validInputs.auraEnabled = true
+		}else{
+			throw new Error('Invalid input for auraEnabled. Use Y, N or Enter for default (N)');
+		}
+	}
+	return validInputs;
+}
+
+//#endregion
+
+	//#region minify text
+
+	let minifyText = vscode.commands.registerCommand('zambra-s.minifyText', () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor) {
+			const selection = editor.selection;
+			const text = editor.document.getText(selection);
+			try {
+				const minifiedText = jsonminify(text);
+				editor.edit((editBuilder) => {
+					editBuilder.replace(selection, minifiedText);
+				});
+			} catch (error) {
+				vscode.window.showErrorMessage('Erro ao minificar o texto: ' + error.message);
 			}
-		};
-		context.subscriptions.push(forceApexDeploy);
-	}
-	exports.activate = activate;
-	
-	// this method is called when your extension is deactivated
-	function deactivate() {}
-	
-	module.exports = {
-		activate,
-		deactivate
-	}
-	
+		}
+	});
+
+	//#endregion 
+
+	context.subscriptions.push(forceApexDeploy,json2apexCommand,minifyText);
+}
+exports.activate = activate;
+
+// this method is called when your extension is deactivated
+function deactivate() {}
+
+module.exports = {
+	activate,
+	deactivate
+}

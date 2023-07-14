@@ -34,6 +34,8 @@
 
 ## COMMANDS
 
-| command                               | description                                           |
-|---------------------------------------|-------------------------------------------------------|
-| `Force Apex Deploy`                   | Deploy Apex Class to an org                           |
+| command                               | description                                                        |
+|---------------------------------------|--------------------------------------------------------------------|
+| `Force Apex Deploy`                   | Deploy Apex Class to an org                                        |
+| `Convert JSON to Apex`                | Convert JSON String to Apex Class                                  |
+| `Minify Text`                         | Compresses text by removing the whitespaces, newlines, indentation |
