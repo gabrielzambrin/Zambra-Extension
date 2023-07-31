@@ -69,17 +69,18 @@ function activate(context) {
 	//#endregion
 	
 	//#region JSON2Apex
-
+	
 	let json2apexCommand = vscode.commands.registerCommand("zambra-s.json2apex",function() {
 		json2apex();
 	});
-	
-	let editor = vscode.window.activeTextEditor;
-	let outputTerminal = vscode.window.createOutputChannel("Zambra's");
-	let className;
-	let auraEnabled;
-	let params = {};
+	const outputTerminal = vscode.window.createOutputChannel("Zambra's");
 	async function json2apex() {
+	
+		const editor = vscode.window.activeTextEditor;
+		let className;
+		let auraEnabled;
+		let params = {};
+
 		let userSelection = editor.document.getText(editor.selection);
 		if(isInvalidSelection(userSelection)){
 			showMessage('error', 'Please select a valid JSON content and try again');
@@ -88,6 +89,7 @@ function activate(context) {
 		className = await vscode.window.showInputBox({
 			placeHolder: "Enter the generated class name"
 		});
+		if(className === undefined)return;
 		if(className === ''){
 			showMessage('error', 'Class name cannot be empty');
 			return;
@@ -96,6 +98,7 @@ function activate(context) {
 			placeHolder: "Use @AuraEnabled? (Y/N - Default N)"
 		});
 		try {
+			if(auraEnabled === undefined)return;
 			let auraOption = validateInputs(auraEnabled, 'aura');
 			auraEnabled = auraOption.auraEnabled;
 		} catch (error) {
@@ -107,13 +110,13 @@ function activate(context) {
 		params.className = className;
 		params.auraEnabled = auraEnabled;
 		params.userSelection = userSelection;
-		outputTerminal.appendLine('Process started. Wait...')
-		submitForConversion(params).catch((e)=>{
+		outputTerminal.appendLine(formatDate(new Date())+'Process started. Wait...')
+		submitForConversion(params,editor).catch((e)=>{
 			showMessage('error', `Something went wrong...${e.message}`);
 		});
 	}
 	
-	async function submitForConversion(params){
+	async function submitForConversion(params,editor){
 		let response = await fetch(`https://stepahead2-dev-ed.my.salesforce-sites.com/Zambras/services/apexrest/JSON2Apex?className=${params.className}&auraEnabled=${params.auraEnabled}`, {
 		method: 'POST',
 		mode: 'cors',
@@ -126,14 +129,19 @@ function activate(context) {
 		showMessage('error', `Something went wrong...${e.message}`);
 	});
 	try {
-		var treatedResponse = await response.json();
+		if(response.status == 200){
+			var treatedResponse = await response.json();
+		}else{
+			outputTerminal.appendLine(formatDate(new Date())+'Error!');
+			throw new Error('JSON conversion failed!');
+		}
 	} catch (e) {
-		showMessage('error', `Something went wrong...${e.message}`);
+		showMessage('error', `Something went wrong... ${e.message}`);
+		return;
 	}
-	outputTerminal.appendLine('Converting data...');
+	outputTerminal.appendLine(formatDate(new Date())+'Converting data...');
 	if (editor) {
 		//foco no editor principal do vscode
-		vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup');
 		editor.edit((selectedText) => {
 			selectedText.replace(editor.selection, treatedResponse);
 		});
@@ -141,73 +149,94 @@ function activate(context) {
 		const firstLine = editor.selection.start.line;
 		// scroll editor para a primeira linha selecionada
 		editor.revealRange(new vscode.Range(firstLine, 0, firstLine, 0), vscode.TextEditorRevealType.Default);
-		outputTerminal.appendLine('Done!');
+		outputTerminal.appendLine(formatDate(new Date())+'Done!');
 		showMessage('success', 'JSON conversion completed successfully');
+		vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup');
 	}
-}
-function showMessage(context, content){
-	switch (context) {
-		case 'success':
-		vscode.window.showInformationMessage(content);
-		break;
-		case 'warning':
-		vscode.window.showWarningMessage(content);
-		break;
-		case 'error':
-		vscode.window.showErrorMessage(content);
-		break;
-		default:
-		break;
 	}
-}
-function isInvalidSelection(input){
-	if(input == '') return true;
-	try {
-		JSON.parse(JSON.stringify(input));
-		return false;
-	} catch (e) {
-		return true;
-	}
-}
-function validateInputs(value, key){
-	value = value.toUpperCase();
-	let validInputs = {};
-	
-	if(key =='aura'){
-		if(value == '' || value == 'N'){
-			validInputs.auraEnabled = false
-		}else if(value == 'Y'){
-			validInputs.auraEnabled = true
-		}else{
-			throw new Error('Invalid input for auraEnabled. Use Y, N or Enter for default (N)');
+	function showMessage(context, content){
+		switch (context) {
+			case 'success':
+			vscode.window.showInformationMessage(content);
+			break;
+			case 'warning':
+			vscode.window.showWarningMessage(content);
+			break;
+			case 'error':
+			vscode.window.showErrorMessage(content);
+			break;
+			default:
+			break;
 		}
 	}
-	return validInputs;
-}
+	function isInvalidSelection(input){
+		if(input == '') return true;
+		try {
+			JSON.parse(input);
+		return false;
+		} catch (e) {
+			return true;
+		}
+	}
+	function validateInputs(value, key){
+		value = value.toUpperCase();
+		let validInputs = {};
+		
+		if(key =='aura'){
+			if(value == '' || value == 'N'){
+				validInputs.auraEnabled = false
+			}else if(value == 'Y'){
+				validInputs.auraEnabled = true
+			}else{
+				throw new Error('Invalid input for auraEnabled. Use Y, N or Enter for default (N)');
+			}
+		}
+		return validInputs;
+	}
+
+	function padToDigits(num,dig) {
+		return num.toString().padStart(dig, '0');
+	  }
+	  
+	function formatDate(date) {
+		return ('[' +
+		  [
+			date.getFullYear(),
+			padToDigits(date.getMonth() + 1,2),
+			padToDigits(date.getDate(),2),
+		  ].join('-') +
+		  ' ' +
+		  [
+			padToDigits(date.getHours(),2),
+			padToDigits(date.getMinutes(),2),
+			padToDigits(date.getSeconds(),2),
+		  ].join(':') + '.' + padToDigits(date.getMilliseconds(),3) +
+		'] ');
+	  }
 
 //#endregion
 
-	//#region minify text
+//#region minify text
 
-	let minifyText = vscode.commands.registerCommand('zambra-s.minifyText', () => {
-		const editor = vscode.window.activeTextEditor;
-		if (editor) {
-			const selection = editor.selection;
-			const text = editor.document.getText(selection);
-			try {
-				const minifiedText = jsonminify(text);
-				editor.edit((editBuilder) => {
-					editBuilder.replace(selection, minifiedText);
-				});
-			} catch (error) {
-				vscode.window.showErrorMessage('Erro ao minificar o texto: ' + error.message);
-			}
+let minifyText = vscode.commands.registerCommand('zambra-s.minifyText', () => {
+	const editor = vscode.window.activeTextEditor;
+	if (editor) {
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+		try {
+			const minifiedText = jsonminify(text);
+			editor.edit((editBuilder) => {
+				editBuilder.replace(selection, minifiedText);
+			});
+		} catch (error) {
+			vscode.window.showErrorMessage('Erro ao minificar o texto: ' + error.message);
 		}
-	});
+	}
+});
 
-	//#endregion 
+//#endregion 
 
-	context.subscriptions.push(forceApexDeploy,json2apexCommand,minifyText);
+context.subscriptions.push(forceApexDeploy,json2apexCommand,minifyText);
 }
 exports.activate = activate;
 

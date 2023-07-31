@@ -18,3 +18,8 @@ All notable changes to the "zambra-s-snippets" extension will be documented in t
 - 0.0.26 -> Change command 'Convert JSON to Apex' and Add command 'Minify Text'
 - 0.0.27 -> Fix code
 - 0.0.28 -> Fix code
+- 0.0.29 -> Fix JSON Validate
+- 0.0.30 -> Fix JSON Replace
+- 0.0.31 -> Fix JSON Validate
+- 0.0.32 -> Fix 'Convert JSON to Apex'
+- 0.0.33 -> Change output Terminal 'Convert JSON to Apex'
