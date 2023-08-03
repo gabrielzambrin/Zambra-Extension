@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to the "zambra-s-snippets" extension will be documented in this file.
+All notable changes to the "zambra-s-extension" extension will be documented in this file.
 
 - Initial release
 
@@ -23,3 +23,4 @@ All notable changes to the "zambra-s-snippets" extension will be documented in t
 - 0.0.31 -> Fix JSON Validate
 - 0.0.32 -> Fix 'Convert JSON to Apex'
 - 0.0.33 -> Change output Terminal 'Convert JSON to Apex'
+- 0.0.34 -> Rename and change logo

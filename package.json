@@ -1,8 +1,8 @@
 {
-    "name": "zambra-s-snippets",
-    "displayName": "Zambra's Snippets",
-    "description": "Some snippets to facilitate and speed up your development.",
-    "version": "0.0.33",
+    "name": "zambra-s-extension",
+    "displayName": "Zambra's Extension",
+    "description": "Some snippets and commands to facilitate and speed up your development.",
+    "version": "0.0.34",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -63,13 +63,13 @@
         "Snippets"
     ],
     "publisher": "GabrielZambrin",
-    "icon": "icon/sflogo.jpg",
+    "icon": "icon/sflogo.png",
     "author": {
         "name": "Gabriel Zambrin"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/gabrielzambrin/Zambra-Snippets"
+        "url": "https://github.com/gabrielzambrin/Zambra-Extension"
     },
     "dependencies": {
         "jsonminify": "^0.4.2",

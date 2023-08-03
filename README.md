@@ -1,4 +1,4 @@
-# Zambra's Snippets
+# Zambra's Extension
 
 ## Functionality
 
