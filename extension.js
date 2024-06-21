@@ -36,7 +36,7 @@ function activate(context) {
 	var showTerminalDeployApexClass = function () {
 		let term = vscode.window.createTerminal('deployApexClass');
 		term.show();
-		term.sendText('sfdx force:source:deploy'+' -m ApexClass:' + DeployApexClassInput.ApexClassName +' -l RunSpecifiedTests -r \"' + DeployApexClassInput.ApexTestClassName  + '\"');
+		term.sendText('sf project deploy start -m ApexClass:' + DeployApexClassInput.ApexClassName +' -l RunSpecifiedTests -t \"' + DeployApexClassInput.ApexTestClassName  + '\"');
 	};
 	
 	var getApexClassName = async () => {
