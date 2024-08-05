@@ -36,27 +36,41 @@ function activate(context) {
 	var showTerminalDeployApexClass = function () {
 		let term = vscode.window.createTerminal('deployApexClass');
 		term.show();
-		term.sendText('sf project deploy start -m ApexClass:' + DeployApexClassInput.ApexClassName +' -l RunSpecifiedTests -t \"' + DeployApexClassInput.ApexTestClassName  + '\"');
+		if(DeployApexClassInput.ApexClassName !== undefined && DeployApexClassInput.ApexClassName !== ''){
+			let classes = DeployApexClassInput.ApexClassName.split(';');
+			let commandSF = 'sf project deploy start -m ApexClass:' + classes.join(' ApexClass:');
+			if(DeployApexClassInput.ApexTestClassName !== undefined && DeployApexClassInput.ApexTestClassName !== ''){
+				let classesTest = DeployApexClassInput.ApexTestClassName.split(';');
+				commandSF += ' -l RunSpecifiedTests -t ' + classesTest.join(' ')  + '';
+			}
+			term.sendText(commandSF);
+		}else{
+			showMessage('error', 'Please enter Apex classes names.');
+			return;
+		}
 	};
 	
 	var getApexClassName = async () => {
 		
 		const className = await vscode.window.showInputBox({
-			placeHolder: 'Enter Apex class name',
-			prompt: 'The Apex class name'
+			placeHolder: 'Enter Apex classes names',
+			prompt: 'The Apex classes names'
 		});
 		
-		if ( className !== undefined ){
+		if ( className !== undefined && className !== '' ){
 			DeployApexClassInput.ApexClassName = className;
 			getApexTestClassName();
+		}else{
+			showMessage('error', 'Please enter Apex classes names.');
+			return;
 		}
 	};
 	
 	var getApexTestClassName = async () => {
 		
 		const testClass = await vscode.window.showInputBox({
-			placeHolder: 'Enter Apex test class name',
-			prompt: 'The Apex test class name'
+			placeHolder: 'Enter Apex tests classes names',
+			prompt: 'The Apex tests classes names'
 			
 		});
 		
