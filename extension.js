@@ -41,7 +41,7 @@ function activate(context) {
 			let commandSF = 'sf project deploy start -m ApexClass:' + classes.join(' ApexClass:');
 			if(DeployApexClassInput.ApexTestClassName !== undefined && DeployApexClassInput.ApexTestClassName !== ''){
 				let classesTest = DeployApexClassInput.ApexTestClassName.split(';');
-				commandSF += ' -l RunSpecifiedTests -t ' + classesTest.join(' ')  + '';
+				commandSF += ' -l RunSpecifiedTests --tests ' + classesTest.join(' ')  + '';
 			}
 			term.sendText(commandSF);
 		}else{
