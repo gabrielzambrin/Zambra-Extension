@@ -25,3 +25,6 @@ All notable changes to the "zambra-s-extension" extension will be documented in 
 - 0.0.33 -> Change output Terminal 'Convert JSON to Apex'
 - 0.0.34 -> Rename and change logo
 - 0.0.35 -> Refactor sf deploy command
+- 0.0.36 -> Fix
+- 0.0.37 -> Fix
+- 0.0.38 -> Change integration domain

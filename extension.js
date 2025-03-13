@@ -131,7 +131,7 @@ function activate(context) {
 	}
 	
 	async function submitForConversion(params,editor){
-		let response = await fetch(`https://stepahead2-dev-ed.my.salesforce-sites.com/Zambras/services/apexrest/JSON2Apex?className=${params.className}&auraEnabled=${params.auraEnabled}`, {
+		let response = await fetch(`https://gabrielzambrin-dev-ed.my.salesforce-sites.com/Zambras/services/apexrest/JSON2Apex?className=${params.className}&auraEnabled=${params.auraEnabled}`, {
 		method: 'POST',
 		mode: 'cors',
 		body: params.userSelection,
